@@ -1,0 +1,27 @@
+Project Tetris - Part 4
+Executive Summary 
+TCSS 305: Programming Practicum, Autumn 2011
+
+Name: Alex Stringham
+UWNetID: ats3216
+Subversion Revision Number: 46
+
+Assignment Overview:
+
+The purpose of milestone 4 was to get us to think outside of the box with our games. We were to clean it up and make
+any extra features we decide to gut in. In mine specifically, I usd sound, lots of animations, a nice background for 
+game board, and a unique picture for each block falling.
+
+Technical Impression:
+
+I love the outcome of this project. Very VERY satisfying to say the least. Although it was a rough project for me to 
+begin with, I am so happy with how it turned out. I didn't get to implement all of the features I wanted just for the
+sole reason of me NEEDING the extra extension from this assignment. I plan to use this extra extension for assignment
+number 2 by the way. I do, however, plan to keep working on this game to get it completely polished (or at least as 
+polished as 8-bit graphics can get haha) just for the simple fact that I think its really cool and am astonished/proud
+of what I was able to build. At the beginning of the quarter, I would have had absolutely no idea how to do anything even
+close to this. Just so you know, I eventually want to make this into a two player game and have there be two characters
+from the megaman universe (by users choice). These two characters will be in the middle of the two games and will "battle"
+each other. The more lines the person clears, the lower the health bar on the opponents character will go. When one of the
+characters health bars reaches zero, that means that they are the LOSER. I think it would be fun to try and implement, and 
+will definitely send you a copy of it once I do! I hope you enjoy my 8-bit throwback as much as I enjoyed creating it!

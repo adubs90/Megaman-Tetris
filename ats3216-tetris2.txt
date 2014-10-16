@@ -1,0 +1,27 @@
+Project Tetris - Part B
+Executive Summary 
+TCSS 305: Programming Practicum, Autumn 2011
+
+Name: Alex Stringham
+UWNetID: ats3216
+Subversion Revision Number: 28
+
+Assignment Overview:
+
+The purpose of this assignment was to build a board class to compliment the pieces class that
+we built in part 1 of the assignment. The board class is supposed to be able to put pieces on 
+it, remove pieces from it, check bounds for pieces so that they cant go out of the board, move
+pieces left right and down, detect full lines, detect multiple full lines, and erase full lines 
+while moving ones above it down one line.
+
+Technical Impression:
+
+This class was easier for me to create than the pieces were for some reason. It made more sense
+since I already had the pieces created. I did some major changes to my piece class though, because
+I was originally doing bounds checking with the pieces, not the board. I also had move left right and 
+down in the pieces class. Those are all moved to the board class now. I also renovated my board class 
+to get rid of the Component inner class that I had originally had. I still however don't understand the 
+JUnit testing all that much. I tried looking for help and getting help from the CSS mentors, but I still
+just don't get it. It still seems, to me at least, that it would be more beneficial time wise, to just 
+write out a Gui class to test the board and the pieces. Again, that's just my opinion. I was able to figure
+out how to test the constructor in the board class though. 

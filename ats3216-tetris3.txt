@@ -1,0 +1,26 @@
+Project Tetris - Part 4
+Executive Summary 
+TCSS 305: Programming Practicum, Autumn 2011
+
+Name: Alex Stringham
+UWNetID: ats3216
+Subversion Revision Number: 40
+
+Assignment Overview:
+
+The purpose of milestone 4 was to get us to think outside of the box with our games. We were to clean it up and make 
+it look like a fun to play game.
+
+Technical Impression:
+
+So this one gave me trouble. Not in the programming necessarily (although there were some hiccups) but mainly
+because of eclipse and Java itself... I kept getting an error message whenever I tried to open eclipse, which 
+was maddening to say the least. I can run it when i use administrator access, but even then, eclipse will randomly
+pop up errors and force close... Very frustrating. I tested my code on another computer, so I believe that It SHOULD
+work, but if not, please let me know. This started occurring out of nowhere, but before it happened, my program was
+working correctly. Anyways, those difficulties aside, this is a basic gui. For my final version, I want to theme my 
+game off of quite possibly my favorite video game hero, Megaman. You will probably see some commented out sections in 
+my game logic and in my gui, as these are ideas of things I want to implement for the final version, but didn't want to
+forget how to implement them. Also, as you'll see, I decided to use a simple thread to run my actual game. I did some 
+extra research on threads and thought i would challenge myself into using one. It actually turned out to be fairly simple,
+to my great surprise.  

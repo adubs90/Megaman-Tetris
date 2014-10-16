@@ -1,0 +1,472 @@
+/*
+ * TCSS 305 - Autumn 2011 
+ * Project Tetris 
+ * Author: Alex Stringham 
+ * UWNetID: ats3216
+ */
+
+package tetrisgame;
+
+import java.applet.Applet;
+import java.applet.AudioClip;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+/**
+ * Gui Class for Tetris game.
+ * 
+ * @author Alex Stringham
+ * @version Nov. 2011
+ */
+public class TetrisGui implements KeyListener
+{
+
+  /**
+   * Frame to display my tetris game.
+   */
+  private final JFrame my_frame = new JFrame("AWESOME-TRIS");
+  /**
+   * Icon for the start button.
+   */
+  private final Icon my_start_icon = new ImageIcon("src/tetrisgame/running.gif");
+  /**
+   * Begging wily Icon.
+   */
+  private final Icon my_direction_icon = new ImageIcon("src/tetrisgame/WilyBeg.gif");
+  /**
+   * Headbangin megaman icon.
+   */
+  private final Icon my_headbang = new ImageIcon("src/tetrisgame/MegamanHeadbang.gif");
+  /**
+   * 
+   */
+  private final Icon my_wily = new ImageIcon("src/tetrisgame/eyebrows.gif");
+  /**
+   * Color for the background.
+   */
+  private final Color my_color = new Color(0, 105, 240);
+  
+  /**
+   * Button to start the game.
+   */
+  private final JButton my_start_button = new JButton("PLAY!", my_start_icon);
+  /**
+   * Object that holds all of my game logic.
+   */
+  private final TetrisGame my_game_logic = new TetrisGame();
+  /**
+   * Object that holds the gui for my board.
+   */
+  private final TetrisBoardGUI my_board_gui = new TetrisBoardGUI();
+
+  /**
+   * Label to display a players current score.
+   */
+  private final JLabel my_score = new JLabel("Score: ");
+  /**
+   * Label to display the players current level.
+   */
+  private final JLabel my_level_label = new JLabel("Level: ");
+  /**
+   * Integer to hold what level the player is on.
+   */
+  private int my_level;
+
+  /**
+   * Button to get directions for the game.
+   */
+  private JButton my_directions;
+
+  
+  /**
+   * Constructor to create the graphics for Tetris.
+   */
+  public TetrisGui()
+  {
+    createGame();
+  }
+
+  /**
+   * 
+   */
+  public void createGame()
+  {
+    my_frame.setResizable(false);
+
+    final JPanel full_panel = new JPanel();
+    full_panel.setLayout(new GridLayout(0, 2));
+
+    
+    final JPanel buttonpanel = new JPanel();
+    buttonpanel.setLayout(new GridLayout(2, 0));
+
+    final JPanel piecepanel = new JPanel();
+    piecepanel.setLayout(new BorderLayout());
+    
+    final JPanel flowpanel = new JPanel();
+    flowpanel.setLayout(new FlowLayout());
+
+    piecepanel.setBackground(my_color);
+    piecepanel.add(my_score, BorderLayout.NORTH);
+    piecepanel.add(new JLabel(my_wily), BorderLayout.CENTER);
+    piecepanel.add(my_level_label, BorderLayout.SOUTH);
+    buttonpanel.add(piecepanel);
+    final JPanel help = new JPanel();
+    help.setLayout(new BorderLayout());
+    help.setBackground(my_color);
+    flowpanel.add(my_start_button);
+    my_directions = new JButton("Directions", my_direction_icon);
+    my_directions.addActionListener(new AboutListener());
+    flowpanel.add(my_directions);
+    buttonpanel.add(help);
+    flowpanel.setBackground(my_color);
+    help.add(flowpanel, BorderLayout.NORTH);
+    help.add(new JLabel(my_headbang), BorderLayout.CENTER);
+    full_panel.add(my_board_gui, BorderLayout.CENTER);
+    full_panel.add(buttonpanel);
+    my_frame.add(full_panel);
+    
+    
+    my_score.setFont(new Font("Comic Sans MS", 1, 48));
+    my_level_label.setFont(new Font("Comic Sans MS", 1, 48));
+    
+
+    my_start_button.addActionListener(new ActionListener()
+    {
+      public void actionPerformed(final ActionEvent the_event)
+      {
+        my_game_logic.startGame();
+        my_frame.requestFocus();
+      }
+    });
+
+    my_game_logic.addScoreListener(new ScoreListener()
+    {
+      public void scoreChange(final ScoreEvent the_event)
+      {
+        
+        my_score.setText("Score: " + the_event.getScore());
+        if (the_event.getScore() % 1000 == 0)
+        {
+          my_level++;
+          my_level_label.setText("Level: " + my_level);
+        }
+      }
+    });
+
+    my_frame.addWindowListener(new WindowAdapter()
+    {
+      public void windowClosing(final WindowEvent the_event)
+      {
+        System.exit(0);
+      }
+    });
+
+    my_game_logic.addBoardListener(my_board_gui);
+    my_frame.addKeyListener(this);
+    my_frame.pack();
+    my_frame.setVisible(true);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void keyPressed(final KeyEvent the_event)
+  {
+
+    switch (the_event.getKeyCode())
+    {
+      case KeyEvent.VK_LEFT:
+        my_game_logic.move(TetrisPieces.LEFT);
+        break;
+      case KeyEvent.VK_RIGHT:
+        my_game_logic.move(TetrisPieces.RIGHT);
+        break;
+      case KeyEvent.VK_UP:
+        my_game_logic.move(TetrisPieces.FLIP);
+        break;
+      case KeyEvent.VK_DOWN:
+        my_game_logic.move(TetrisPieces.DROP);
+        break;
+      case KeyEvent.VK_SPACE:
+        my_game_logic.move(TetrisPieces.HARD_DROP);
+        break;
+      case KeyEvent.VK_P:
+        my_game_logic.setPaused(true);
+        break;
+      case KeyEvent.VK_R:
+        my_game_logic.setPaused(false);
+        break;
+      case KeyEvent.VK_Q:
+        my_game_logic.stopGame();
+        break;
+      default:
+        break;
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void keyReleased(final KeyEvent the_event)
+  {
+    // empty
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void keyTyped(final KeyEvent the_event)
+  {
+    // empty
+  }
+
+  /**
+   * Action Listener for the directions button.
+   * 
+   * @author Alex
+   * @version Nov. 2011
+   */
+  private class AboutListener implements ActionListener
+  {
+    /**
+     * Sound for the directions menu.
+     */
+    private AudioClip my_sound;
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void actionPerformed(final ActionEvent the_action)
+    {
+      final java.io.File file = new java.io.File("src/tetrisgame/blues.wav");
+      try
+      {
+        my_sound = Applet.newAudioClip(file.toURL());
+      }
+      catch (final MalformedURLException e)
+      {
+
+        e.printStackTrace();
+      }
+      if (the_action.getSource() == my_directions)
+      {
+        my_sound.play();
+        JOptionPane.showMessageDialog(null, "Left Arrow - Move piece left." +
+                                             "\nRight Arrow - Move piece right." +
+                                             "\nDown Arrow - Move piece down manually." +
+                                             "\nUp Arrow - Flip Piece clockwise." +
+                                             "\nSpacebar - Hard drop piece." +
+                                             "\n'P' - Pause game." + "\n'R' - Resume game." +
+                                             "\n'Q' - Quit the current game.");
+
+      }
+
+    }
+
+  }
+
+  /**
+   * This class gives a graphical representation of a TetrisBoard GUI.
+   */
+  @SuppressWarnings("serial")
+  public static class TetrisBoardGUI extends JPanel implements BoardListener
+  {
+    /**
+     * Constant for the games height.
+     */
+    private static final int HEIGHT = 800;
+    /**
+     * Constant for the games width.
+     */
+    private static final int WIDTH = 400;
+    /**
+     * Object for my board.
+     */
+    private TetrisBoard my_board;
+    
+    /**
+     * Image for board background.
+     */
+    private Image my_wily;
+
+    /**
+     * {@inheritDoc}
+     */
+    public void boardChange(final BoardEvent the_event)
+    {
+      my_board = (TetrisBoard) the_event.getSource();
+      repaint();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void paintComponent(final Graphics the_graphics)
+    {
+      
+     
+      try
+      {
+        my_wily = ImageIO.read(new File("src/tetrisgame/wily.gif"));
+      }
+      catch (final IOException e)
+      {
+        e.printStackTrace();
+      }
+        
+     
+      
+      final int width = getBounds().width;
+      final int height = getBounds().height;
+
+      final Image current_image = my_wily;
+      final Graphics current_graphics = current_image.getGraphics();
+
+      if (my_board != null)
+      {
+        final int num_columns = my_board.getColumns();
+        final int num_rows = my_board.getRows();
+
+        for (int i = 0; i < num_columns; i++) // columns
+        {
+          for (int j = 0; j < num_rows; j++) // rows
+          {
+            final int piece = my_board.getPiece(i, j);
+
+            if (piece != TetrisBoard.BLANK_SQUARE)
+            {
+          
+              try
+              {
+                drawBlock(getPieceImage(piece), current_graphics, 
+                          (i * width / num_columns) + 1, 
+                          (j * height / num_rows) + 1,
+                          (width / num_columns) - 1, 
+                          (height / num_rows) - 1);
+              }
+              catch (final IOException e)
+              {
+              
+                e.printStackTrace();
+              }
+            }
+          }
+        }
+      }
+
+      
+/*     
+      }*/
+  
+      
+      current_graphics.drawRect(0, 0, width - 1, height - 1);
+
+      the_graphics.drawImage(my_wily, 0, 0, width, height, null);
+    }
+
+    /**
+     * Draws a square for a teris piece.
+     * 
+     * @param the_image gets the pictrue to be drawn.
+     * @param the_graphics graphics drawn.
+     * @param the_x x coordinate.
+     * @param the_y y coordinate.
+     * @param the_width the squares width.
+     * @param the_height the squares height.
+     */
+    private void drawBlock(final Image the_image, 
+                           final Graphics the_graphics,
+                           final int the_x,
+                           final int the_y,
+                           final int the_width,
+                           final int the_height)
+    {
+
+      the_graphics.drawImage(the_image, 
+                             the_x,
+                             the_y,
+                             the_width,
+                             the_height,
+                             Color.black,
+                             null);
+
+     
+    }
+
+    /**
+     * Gets the games preferred size.
+     * 
+     * @return the preferred size.
+     */
+    public Dimension getPreferredSize()
+    {
+      return new Dimension(WIDTH, HEIGHT);
+    }
+
+    /**
+     * Gets the image for each of the pieces.
+     * 
+     * @param the_image image file.
+     * @return image for each piece.
+     * @throws IOException for no file.
+     */
+  
+    private Image getPieceImage(final int the_image) throws IOException
+    {
+      Image result = null;
+
+      switch (the_image)
+      {
+        case TetrisPieces.L_PIECE:
+          result = ImageIO.read(new File("src/tetrisgame/geminiman.gif"));
+          break;
+        case TetrisPieces.J_PIECE:
+          result = ImageIO.read(new File("src/tetrisgame/gutsman.gif"));
+          break;
+        case TetrisPieces.I_PIECE:
+          result = ImageIO.read(new File("src/tetrisgame/protoman.gif"));
+          break;
+        case TetrisPieces.Z_PIECE:
+          result = ImageIO.read(new File("src/tetrisgame/brightman.gif"));
+          break;
+        case TetrisPieces.S_PIECE:
+          result = ImageIO.read(new File("src/tetrisgame/skullman.gif"));
+          break;
+        case TetrisPieces.O_PIECE:
+          result = ImageIO.read(new File("src/tetrisgame/iceman.gif"));
+          break;
+        case TetrisPieces.T_PIECE:
+          result = ImageIO.read(new File("src/tetrisgame/quickman.gif"));
+          break;
+        default:
+          break;
+      }
+
+      return result;
+    }
+  }
+}
